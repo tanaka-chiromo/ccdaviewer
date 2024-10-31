@@ -1,3 +1,4 @@
+import io
 import os
 import shutil
 import requests
@@ -5,7 +6,9 @@ import requests
 
 class CcdaViewerClient():
 
-    def __init__(self, api_key, api_url="https://www.ccdaviewer.com"):
+    def __init__(self, api_email, api_key, api_url="https://www.ccdaviewer.com"):
+
+        self.api_email = api_email
         self.api_key = api_key
         self.api_url = api_url
 
@@ -18,9 +21,12 @@ class CcdaViewerClient():
 
     def convert_xml_to_html(self, src:str, dst:str|None=None, dst_folder:str|None=None, return_as_byte:bool=False):
 
-        file = {'files': open(src, 'rb')} 
-        input_data = {"api_key": self.api_key}
-        response = requests.post(f"{self.api_url}/api", json=input_data, files=file)
+        files = {
+            'file': (open(src, 'rb')),
+            'api_key': (io.StringIO(self.api_key)),
+            'api_email': (io.StringIO(self.api_email))
+        }
+        response = requests.post(f"{self.api_url}/api", files=files)
         if return_as_byte:
             return response.content
         sname = dst if dst is not None else src.split(".xml")[0]
