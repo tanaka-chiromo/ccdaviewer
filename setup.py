@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name = 'ccdaviewer',     
     packages = ['ccdaviewer'],  
-    version = '0.1.1', 
+    version = '0.2.0', 
     license='MIT',      
     description = 'This is the python client to the API hosted by https://www.ccdaviewer.com', 
     author = 'Tanaka Chiromo',                   

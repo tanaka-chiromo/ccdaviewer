@@ -2,12 +2,12 @@ import os
 import shutil
 import requests
 
-api_url = "https://www.ccdaviewer.com"
 
 class CcdaViewerClient():
 
-    def __init__(self):
-        pass
+    def __init__(self, api_key, api_url="https://www.ccdaviewer.com"):
+        self.api_key = api_key
+        self.api_url = api_url
 
     def _preprocess_folders(self, folname:str):
         try:
@@ -19,7 +19,8 @@ class CcdaViewerClient():
     def convert_xml_to_html(self, src:str, dst:str|None=None, dst_folder:str|None=None, return_as_byte:bool=False):
 
         file = {'files': open(src, 'rb')} 
-        response = requests.post(f"{api_url}/api", files=file)
+        input_data = {"api_key": self.api_key}
+        response = requests.post(f"{self.api_url}/api", json=input_data, files=file)
         if return_as_byte:
             return response.content
         sname = dst if dst is not None else src.split(".xml")[0]
